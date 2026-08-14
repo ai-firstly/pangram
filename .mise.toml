@@ -1,0 +1,3 @@
+# Project toolchain configuration. Run `mise install` after cloning.
+[tools]
+ruby = "latest"

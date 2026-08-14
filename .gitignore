@@ -1,0 +1,11 @@
+*.gem
+/.bundle/
+/.yardoc/
+/coverage/
+/doc/
+/pkg/
+/tmp/
+/vendor/bundle/
+.DS_Store
+.ruby-lsp/
+.rspec_status
