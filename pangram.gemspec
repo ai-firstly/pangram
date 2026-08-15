@@ -17,7 +17,7 @@ Gem::Specification.new do |spec|
   spec.metadata['allowed_push_host'] = 'https://rubygems.org'
   spec.metadata['homepage_uri'] = spec.homepage
   spec.metadata['source_code_uri'] = 'https://github.com/ai-firstly/pangram'
-  spec.metadata['changelog_uri'] = 'https://github.com/ai-firstly/pangram/blob/main/CHANGELOG.md'
+  spec.metadata['changelog_uri'] = 'https://github.com/ai-firstly/pangram/blob/master/CHANGELOG.md'
   spec.metadata['documentation_uri'] = 'https://rubydoc.info/gems/pangram'
   spec.metadata['bug_tracker_uri'] = 'https://github.com/ai-firstly/pangram/issues'
   spec.metadata['rubygems_mfa_required'] = 'true'

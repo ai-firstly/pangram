@@ -1,0 +1,80 @@
+name: Release Gem
+
+on:
+  push:
+    tags:
+      - 'v*'
+
+concurrency:
+  group: release-${{ github.ref }}
+  cancel-in-progress: false
+
+jobs:
+  release:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+
+    steps:
+    - uses: actions/checkout@v4
+
+    - name: Set up Ruby
+      uses: ruby/setup-ruby@v1
+      with:
+        ruby-version: '4.0'
+        bundler-cache: true
+
+    - name: Verify tag matches gem version
+      id: version
+      run: |
+        tag="${GITHUB_REF_NAME#v}"
+        version="$(ruby -Ilib -e 'require "pangram/version"; print Pangram::VERSION')"
+        if [ "$tag" != "$version" ]; then
+          echo "Tag v$tag does not match Pangram::VERSION $version"
+          exit 1
+        fi
+        echo "version=$version" >> "$GITHUB_OUTPUT"
+
+    - name: Extract release notes from CHANGELOG.md
+      env:
+        VERSION: ${{ steps.version.outputs.version }}
+      run: |
+        awk -v ver="$VERSION" '
+          index($0, "## [" ver "]") == 1 { found=1; next }
+          found && /^## / { exit }
+          found { print }
+        ' CHANGELOG.md > release_notes.md
+        if ! grep -q '[^[:space:]]' release_notes.md; then
+          echo "No CHANGELOG.md entry found for version $VERSION"
+          exit 1
+        fi
+
+    - name: Run tests
+      run: bundle exec rake spec
+
+    - name: Run RuboCop
+      run: bundle exec rubocop
+
+    - name: Build gem
+      run: bundle exec rake build
+
+    - name: Create GitHub Release
+      uses: softprops/action-gh-release@v2
+      with:
+        files: pkg/pangram-${{ steps.version.outputs.version }}.gem
+        body_path: release_notes.md
+        draft: false
+        prerelease: false
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+    - name: Publish to RubyGems
+      run: |
+        if [ -z "$GEM_HOST_API_KEY" ]; then
+          echo "Secret RUBYGEMS_API_KEY is not set"
+          exit 1
+        fi
+        gem push "pkg/pangram-${VERSION}.gem"
+      env:
+        VERSION: ${{ steps.version.outputs.version }}
+        GEM_HOST_API_KEY: ${{ secrets.RUBYGEMS_API_KEY }}
