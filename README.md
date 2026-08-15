@@ -1,5 +1,10 @@
 # Pangram Ruby SDK
 
+[![Gem Version](https://img.shields.io/gem/v/pangram.svg?style=flat-square)](https://rubygems.org/gems/pangram)
+[![CI](https://img.shields.io/github/actions/workflow/status/ai-firstly/pangram/ci.yml?branch=master&label=CI&style=flat-square)](https://github.com/ai-firstly/pangram/actions/workflows/ci.yml)
+[![Ruby](https://img.shields.io/badge/ruby-%3E%3D%203.1.0-red.svg?style=flat-square)](https://www.ruby-lang.org/)
+[![License](https://img.shields.io/badge/License-MIT-blue.svg?style=flat-square)](LICENSE)
+
 Ruby client for the [Pangram Labs API](https://docs.pangram.com), with support
 for AI detection, asynchronous bulk jobs, file uploads, and plagiarism checks.
 
